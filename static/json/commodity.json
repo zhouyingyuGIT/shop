@@ -1,0 +1,52 @@
+{
+  "list":[
+    {
+      "id":"001",
+      "imgURL":"../../static/img/coffee1.jpg",
+      "name":"Brewed Coffee",
+      "currency":"USD",
+      "amount":"0.01",
+      "num":1
+    },
+    {
+      "id":"002",
+      "imgURL":"../../static/img/coffee2.jpg",
+      "name":"Cafe Mocha",
+      "currency":"USD",
+      "amount":"3.00",
+      "num":1
+    },
+    {
+      "id":"003",
+      "imgURL":"../../static/img/coffee3.jpg",
+      "name":"Caramel Macchiato",
+      "currency":"USD",
+      "amount":"3.00",
+      "num":1
+    },
+    {
+      "id":"004",
+      "imgURL":"../../static/img/coffee4.jpg",
+      "name":"Caramel Mocha",
+      "currency":"USD",
+      "amount":"4.00",
+      "num":1
+    },
+    {
+      "id":"005",
+      "imgURL":"../../static/img/coffee5.jpg",
+      "name":"Espresso Con Panna",
+      "currency":"USD",
+      "amount":"5.00",
+      "num":1
+    },
+    {
+      "id":"006",
+      "imgURL":"../../static/img/coffee6.jpg",
+      "name":"Espresso",
+      "currency":"USD",
+      "amount":"2.00",
+      "num":1
+    }
+  ]
+}
