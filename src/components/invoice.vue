@@ -73,7 +73,7 @@
                   </el-input>
                 </div>
                 <div style="margin-top: 10px">
-                  <el-button style="width: 100%" type="primary" size="medium" :disabled="isdisabled">{{pay}}</el-button>
+                  <el-button @click="handlePay()" style="width: 100%" type="primary" size="medium" :disabled="isdisabled">{{pay}}</el-button>
                 </div>
               </div>
             </el-col>
@@ -90,11 +90,11 @@
             <div>
               <el-input placeholder="请输入内容" v-model="ewm.amount">
                 <template slot="prepend">Http://</template>
-                <el-button slot="append" icon="el-icon-search"></el-button>
+                <el-button slot="append" icon="el-icon-third-erweima"></el-button>
               </el-input>
               <el-input placeholder="请输入内容" v-model="ewm.address">
                 <template slot="prepend">Http://</template>
-                <el-button slot="append" icon="el-icon-search"></el-button>
+                <el-button slot="append" icon="el-icon-third-erweima"></el-button>
               </el-input>
             </div>
           </div>
@@ -188,6 +188,9 @@
         this.current = index;
         this.isdisabled = false;
         this.pay = "pay with " + item.name
+      },
+      handlePay(){
+        this.bat=false
       }
     }
   }
