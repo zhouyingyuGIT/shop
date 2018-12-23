@@ -1,6 +1,18 @@
 <template>
   <el-container>
-    <el-header>IBS</el-header>
+    <el-header>
+      <el-row :gutter="20">
+        <el-col :span="12">
+          IBS
+        </el-col>
+        <el-col :span="12">
+          <div style="text-align: right">
+            <span style="font-size: 20px;cursor: pointer" @click="handlePos()">Point of Sale</span>
+          </div>
+
+        </el-col>
+      </el-row>
+    </el-header>
     <el-main>
       <router-view/>
     </el-main>
@@ -13,6 +25,11 @@ export default {
   data () {
     return {
       msg: 'Welcome to Your Vue.js App'
+    }
+  },
+  methods:{
+    handlePos(){
+      this.$router.push('/pos')
     }
   }
 }

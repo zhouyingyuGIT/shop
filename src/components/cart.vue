@@ -130,8 +130,6 @@
               cartTotal:cartTotal
             }
           });
-          console.log(tableData);
-          console.log(cartTotal);
         }
       },
     }

@@ -5,7 +5,7 @@
         <el-col :span="24">
           <el-row :gutter="20">
             <el-col :span="24">
-              <div style="padding:10px 0px;font-size: 18px">Order #15937</div>
+              <div style="padding:10px 0px;font-size: 18px">Order #{{orderID}}</div>
             </el-col>
           </el-row>
           <el-row :gutter="20">
@@ -17,17 +17,17 @@
           </el-row>
           <el-row :gutter="20">
             <el-col :span="24">
-              <div v-show=bat style="text-align: right;font-size: 24px;padding: 24px 0px">
+              <div v-show=step.step1 style="text-align: right;font-size: 24px;padding: 24px 0px">
                 {{amount}}&nbsp;&nbsp;{{currency}}
               </div>
-              <div v-show=!bat style="text-align: right;padding: 24px 0px">
+              <div v-show=!step.step1 style="text-align: right;padding: 24px 0px">
                 <div class="clearfloat">
                   <div style="float: right;margin-left: 16px">
-                    <img style="width: 50px;height: 50px" src="../../static/img/bitcoin.png" alt="">
+                    <img style="width: 50px;height: 50px" v-bind:src="ewm.imgURL" alt="">
                   </div>
                   <div style="float: right">
-                    <div style="line-height: 24px;font-size: 20px">0.353611 LTC</div>
-                    <div style="line-height: 28px;font-size: 16px;color: #aaa">9.01 USD</div>
+                    <div style="line-height: 24px;font-size: 20px">{{ewm.amount}}&nbsp;&nbsp;{{ewm.currency}}</div>
+                    <div style="line-height: 28px;font-size: 16px;color: #aaa">{{amount}}&nbsp;&nbsp;{{currency}}</div>
                   </div>
 
                 </div>
@@ -37,7 +37,7 @@
         </el-col>
       </el-row>
       <el-row :gutter="20" style="border-top: 2px solid #eee;padding: 30px 10px;">
-        <el-col :span="24" v-show=bat>
+        <el-col :span="24" v-show=step.step1>
           <el-row :gutter="20">
             <el-col :span="24">
               <div style="text-align: center;font-size: 24px;padding: 10px 0px">
@@ -67,6 +67,7 @@
               <div>
                 <div>
                   <el-input
+                    v-model="message"
                     size="medium"
                     placeholder="请输入内容"
                     prefix-icon="el-icon-message">
@@ -79,7 +80,7 @@
             </el-col>
           </el-row>
         </el-col>
-        <el-col :span="20" :offset="2" v-show=!bat>
+        <el-col :span="20" :offset="2" v-show=step.step2>
           <div>
             <div style="text-align: center">
               <vue-q-art :config=config></vue-q-art>
@@ -88,15 +89,27 @@
 
 
             <div>
-              <el-input placeholder="请输入内容" v-model="ewm.amount">
-                <template slot="prepend">Http://</template>
+              <el-input readonly placeholder="请输入内容" v-model="ewm.amount">
+                <template slot="prepend">{{ewm.currency}}</template>
                 <el-button slot="append" icon="el-icon-third-erweima"></el-button>
               </el-input>
-              <el-input placeholder="请输入内容" v-model="ewm.address">
-                <template slot="prepend">Http://</template>
+              <el-input readonly placeholder="请输入内容" v-model="ewm.address">
+                <template slot="prepend">
+                  <a :href=href >
+                    <i class="el-icon-third-qianbao"></i>
+                  </a>
+                </template>
+                <!--<el-button slot="prepend" icon="el-icon-third-qianbao"></el-button>-->
                 <el-button slot="append" icon="el-icon-third-erweima"></el-button>
               </el-input>
             </div>
+          </div>
+        </el-col>
+        <el-col :span="20" :offset="2" v-show=step.step3>
+          <div style="text-align: center;color: #27AE60;">
+            <i class="el-icon-third-zhifuchenggong" style="font-size: 60px;color: #27AE60"></i>
+            <div style="margin-top: 16px;font-size: 20px">Paid and Confirmed</div>
+            <div style="margin-top: 20px"></div>
           </div>
         </el-col>
       </el-row>
@@ -118,7 +131,7 @@
             "currency": "BTC",
             "amount": "0.00895738",
             "rate": ""
-          },
+          }/*,
           {
             "imgURL": "../../static/img/litecoin.png",
             "name": "Litecoin",
@@ -139,7 +152,7 @@
             "currency": "BCH",
             "amount": "0.062481",
             "rate": ""
-          }
+          }*/
         ],
         current: null,
         rate: "",
@@ -148,10 +161,20 @@
         orders: "",
         amount: "",
         currency: "",
-        bat: false,
+        orderID: "",
+        message: "",
+        href: "",
+        step:{
+          step1:true,
+          step2:false,
+          step3:false
+        },
+
         ewm:{
           amount:"34567",
-          address:"ertyukjhfgdfgthytj"
+          address:"ertyukjhfgdfgthytj",
+          currency:"BTC",
+          imgURL:""
         },
         msg: 'Welcome to Your Vue.js App',
         config: {
@@ -177,20 +200,61 @@
         this.orders = orderArr.join(",");
         this.amount = cartTotal.amount3;
         this.currency = cartTotal.currency;
-        for (let j = 0; j < this.invoice.length; j++) {
-          this.invoice[j].rate = Math.floor(Math.random() * (5000 - 1000 + 1)) + 1000;
-          this.invoice[j].amount = (this.amount / this.invoice[j].rate).toFixed(9)
-          // this.invoice[j].amount=reg.test(this.amount/this.invoice[j].rate)
-        }
+        this.$axios.post("/order/checkout",{
+          "orderAmount":this.amount,
+          "orderCurrency": "USD"
+        }).then((res) => {
+          console.log(res.data);
+          this.orderID=res.data.orderId;
+          for (let j = 0; j < this.invoice.length; j++) {
+            if(this.invoice[j].currency==res.data.paymentCurrency){
+              this.invoice[j].amount=res.data.paymentAmount
+            }
+          }
+        }).catch(function (error) {
+          console.log(error);
+        });
 
       },
       handleCurrency(index, item) {
         this.current = index;
         this.isdisabled = false;
-        this.pay = "pay with " + item.name
+        this.pay = "pay with " + item.name;
+        this.ewm={
+            amount:item.amount,
+            address:"ertyukjhfgdfgthytj",
+            currency:item.currency,
+            imgURL:item.imgURL
+        }
       },
       handlePay(){
-        this.bat=false
+        this.step={
+          step1:false,
+          step2:true,
+          step3:false
+        };
+        this.$axios.post("/order/pay",{
+          "orderId": this.orderID,
+          "payerEmail": this.message,
+          "paymentAmount": this.ewm.amount,
+          "paymentCurrency": this.ewm.currency
+        }).then((res) => {
+          console.log(res.data);
+          this.ewm.address=res.data.paymentAddress;
+          this.config.value=res.data.paymentUrl;
+          this.href=res.data.paymentUrl;
+          this.$axios.get("/order/result?address="+this.ewm.address+"&amount="+this.ewm.amount).then((res) => {
+            this.step={
+              step1:false,
+              step2:false,
+              step3:true
+            };
+          })
+        }).catch(function (error) {
+          console.log(error);
+        });
+
+
       }
     }
   }

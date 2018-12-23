@@ -4,6 +4,7 @@ import shop from '@/components/shop'
 import commodity from '@/components/commodity'
 import cart from '@/components/cart'
 import invoice from '@/components/invoice'
+import pos from '@/components/pos'
 
 Vue.use(Router);
 
@@ -31,6 +32,10 @@ export default new Router({
           path:"/invoice",
           name:"invoice",
           component:invoice
+        },
+        {
+          path:"/pos",
+          component:pos
         }
       ]
     }
